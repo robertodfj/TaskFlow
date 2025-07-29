@@ -6,6 +6,7 @@ import './index.css';
 import LogReg from './Login-Register'
 import AdminCreate from './Admin-create';
 import AdminRegister from './Admin-Register';
+import DashBoard from './Dash-Board'
 
 const root = createRoot(document.getElementById('root'));
 
@@ -13,9 +14,8 @@ root.render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LogReg />} />
-        <Route path="/admin-create" element={<AdminCreate />} />
-        <Route path="/admin-register" element={<AdminRegister />} />
+        <Route path="/" element={<DashBoard />} />
+        
       </Routes>
     </BrowserRouter>
   </StrictMode>
