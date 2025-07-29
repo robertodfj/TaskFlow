@@ -17,7 +17,7 @@ export default function DashBoard() {
   return (
     <main>
       <header>
-        <h2>TaskFlow ®</h2>
+        <h2 className="p-3">TaskFlow ®</h2>
         <h3>Tus tareas creadas</h3>
         <button>Crear Tarea</button>
         <table>
