@@ -6,7 +6,7 @@ import './index.css';
 import LogReg from './Login-Register'
 import AdminCreate from './Admin-create';
 import AdminRegister from './Admin-Register';
-import DashBoard from './Dash-Board'
+import DashBoard from './Dashboard'
 
 const root = createRoot(document.getElementById('root'));
 
