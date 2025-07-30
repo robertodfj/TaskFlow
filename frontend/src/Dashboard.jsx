@@ -36,13 +36,12 @@ export default function DashBoard() {
         <table className="w-full table-auto border-collapse">
           <thead>
             <tr className="bg-gray-800">
-              <th className="p-2 text-left">ID</th>
+              <th className="p-4 text-left">ID</th>
               <th className="p-3 text-left">Título</th>
               <th className="p-3 text-left">Descripción</th>
-              <th className="p-3 text-left">Creador</th>
               <th className="p-3 text-left">Estado</th>
               <th className="p-3 text-left">Prioridad</th>
-              <th className="p-2 text-left">Fecha Límite</th>
+              <th className=" text-left">Fecha Límite</th>
             </tr>
           </thead>
           <tbody>
@@ -51,7 +50,6 @@ export default function DashBoard() {
                 <td className="p-3">{tarea.id}</td>
                 <td className="p-3">{tarea.titulo}</td>
                 <td className="p-3">{tarea.descripcion}</td>
-                <td className="p-3">{tarea.creador}</td>
                 <td className="p-3">{tarea.estado}</td>
                 <td className="p-3">{tarea.prioridad}</td>
                 <td className="p-3">{tarea.fechaLimite}</td>
