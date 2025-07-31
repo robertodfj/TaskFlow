@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function CrearTarea() {
   const [nuevaTarea, setNuevaTarea] = useState({
@@ -8,6 +9,8 @@ export default function CrearTarea() {
     fechaLimite: "",
     estado: "pendiente",
   });
+
+  const navigate = useNavigate();
 
 
   function handleChange(e) {
@@ -126,6 +129,7 @@ export default function CrearTarea() {
 
       <button
         className="mt-6 bg-gray-700 hover:bg-gray-600 transition px-6 py-3 rounded-xl text-white font-semibold shadow-md"
+        onClick={() => navigate("/dashboard")}
       >
         Ver todas las tareas
       </button>

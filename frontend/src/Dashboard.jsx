@@ -1,18 +1,27 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function DashBoard() {
   const [tareas, setTareas] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      navigate("/");
+      return; // Evita que siga ejecutando el fetch
+    }
+
     fetch("http://localhost:8080/tareas/mostrar", {
       headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => res.json())
       .then((data) => setTareas(data))
       .catch((err) => console.error("Error al obtener las tareas", err));
-  }, []);
+  }, [navigate]);
 
   return (
     <main className="min-h-screen bg-gray-900 text-white p-4">
@@ -24,15 +33,15 @@ export default function DashBoard() {
 
         <input type="text" placeholder="Busca tu tarea por el ID" />
 
-        <button className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded">
+        <button
+          className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded"
+          onClick={() => navigate("/crear-tarea")}
+        >
           Crear Tarea
         </button>
-
-
       </header>
 
       <section>
-        
         <table className="w-full table-auto border-collapse">
           <thead>
             <tr className="bg-gray-800">
@@ -41,7 +50,7 @@ export default function DashBoard() {
               <th className="p-3 text-left">Descripción</th>
               <th className="p-3 text-left">Estado</th>
               <th className="p-3 text-left">Prioridad</th>
-              <th className=" text-left">Fecha Límite</th>
+              <th className="text-left">Fecha Límite</th>
             </tr>
           </thead>
           <tbody>
