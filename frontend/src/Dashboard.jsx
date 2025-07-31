@@ -18,8 +18,8 @@ export default function DashBoard() {
     <main className="min-h-screen bg-gray-900 text-white p-4">
       <header className="flex justify-between items-center mb-5 p-3">
         <div>
-          <h1 className="text-4xl font-bold">TaskFlow.</h1>
-          <h2 className="text-xl text-gray-400">Tus tareas creadas</h2>
+          <h2 className="text-4xl font-bold">TaskFlow.</h2>
+          <h3 className="text-xl text-gray-400">Tus tareas creadas</h3>
         </div>
 
         <input type="text" placeholder="Busca tu tarea por el ID" />
