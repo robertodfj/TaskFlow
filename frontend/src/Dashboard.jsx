@@ -5,12 +5,12 @@ export default function DashBoard() {
   const [tareas, setTareas] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
+  useEffect(() => {
     if (!token) {
       navigate("/");
-      return; // Evita que siga ejecutando el fetch
+      return;
     }
 
     fetch("http://localhost:8080/tareas/mostrar", {
@@ -21,7 +21,30 @@ export default function DashBoard() {
       .then((res) => res.json())
       .then((data) => setTareas(data))
       .catch((err) => console.error("Error al obtener las tareas", err));
-  }, [navigate]);
+  }, [navigate, token]);
+
+  const handleEstadoChange = (id, nuevoEstado) => {
+    const tarea = tareas.find((t) => t.id === id);
+    if (!tarea) return;
+
+    const tareaActualizada = { ...tarea, estado: nuevoEstado };
+
+    fetch(`http://localhost:8080/tareas/editar/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(tareaActualizada),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Error al actualizar tarea");
+        setTareas((prev) =>
+          prev.map((t) => (t.id === id ? { ...t, estado: nuevoEstado } : t))
+        );
+      })
+      .catch((err) => console.error(err));
+  };
 
   return (
     <main className="min-h-screen bg-gray-900 text-white p-4">
@@ -59,7 +82,19 @@ export default function DashBoard() {
                 <td className="p-3">{tarea.id}</td>
                 <td className="p-3">{tarea.titulo}</td>
                 <td className="p-3">{tarea.descripcion}</td>
-                <td className="p-3">{tarea.estado}</td>
+                <td className="p-3">
+                  <select
+                    value={tarea.estado}
+                    onChange={(e) =>
+                      handleEstadoChange(tarea.id, e.target.value)
+                    }
+                    className="appearance-none w-full bg-gray-900 text-white p-2  rounded-md border border-gray-600 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-600 transition duration-200"
+                  >
+                    <option value="pendiente">Pendiente</option>
+                    <option value="en progreso">En progreso</option>
+                    <option value="hecha">Hecha</option>
+                  </select>
+                </td>
                 <td className="p-3">{tarea.prioridad}</td>
                 <td className="p-3">{tarea.fechaLimite}</td>
               </tr>
