@@ -5,9 +5,9 @@ export default function VistaAdmin() {
   const [tareas, setTareas] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
+  useEffect(() => {
     if (!token) {
       navigate("/");
       return;
@@ -19,20 +19,16 @@ export default function VistaAdmin() {
       },
     })
       .then((res) => {
-        if (!res.ok) {
-          throw new Error("Error en la respuesta del servidor");
-        }
+        if (!res.ok) throw new Error("Error en la respuesta del servidor");
         return res.json();
       })
       .then((data) => setTareas(data))
       .catch((err) => console.error("Error al cargar las tareas:", err));
-  }, [navigate]);
+  }, [navigate, token]);
 
   function eliminarTarea(id) {
     const confirmar = window.confirm("¿Estás seguro de eliminar esta tarea?");
     if (!confirmar) return;
-
-    const token = localStorage.getItem("token");
 
     fetch(`http://localhost:8080/tareas/${id}`, {
       method: "DELETE",
@@ -41,13 +37,34 @@ export default function VistaAdmin() {
       },
     })
       .then((res) => {
-        if (!res.ok) {
-          throw new Error("Error al eliminar la tarea");
-        }
+        if (!res.ok) throw new Error("Error al eliminar la tarea");
         setTareas((prev) => prev.filter((t) => t.id !== id));
       })
       .catch((err) => console.error("Error:", err));
   }
+
+  const handleEstadoChange = (id, nuevoEstado) => {
+    const tarea = tareas.find((t) => t.id === id);
+    if (!tarea) return;
+
+    const tareaActualizada = { ...tarea, estado: nuevoEstado };
+
+    fetch(`http://localhost:8080/tareas/editar/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(tareaActualizada),
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error("Error al actualizar tarea");
+        setTareas((prev) =>
+          prev.map((t) => (t.id === id ? { ...t, estado: nuevoEstado } : t))
+        );
+      })
+      .catch((err) => console.error(err));
+  };
 
   return (
     <main className="min-h-screen bg-gray-900 text-white p-4">
@@ -90,11 +107,20 @@ export default function VistaAdmin() {
                 <td className="p-3">{tarea.id}</td>
                 <td className="p-3">{tarea.titulo}</td>
                 <td className="p-3">{tarea.descripcion}</td>
-                <td className="p-3">{tarea.estado}</td>
+                <td className="p-3">
+                  <select
+                    value={tarea.estado}
+                    onChange={(e) => handleEstadoChange(tarea.id, e.target.value)}
+                    className="appearance-none bg-gray-900 text-white p-2 rounded-md border border-gray-600 focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-600 transition duration-200"
+                  >
+                    <option value="pendiente">Pendiente</option>
+                    <option value="en progreso">En progreso</option>
+                    <option value="hecha">Hecha</option>
+                  </select>
+                </td>
                 <td className="p-3">{tarea.prioridad}</td>
                 <td className="p-3">{tarea.fechaLimite}</td>
                 <td className="p-3 space-x-2">
-                  {/* Botón editar (en futuro puedes conectar a /editar-tarea/:id) */}
                   <button
                     onClick={() => navigate(`/editar-tarea/${tarea.id}`)}
                     className="bg-yellow-500 hover:bg-yellow-600 px-2 py-1 rounded text-black"

@@ -54,7 +54,11 @@ export default function DashBoard() {
           <h3 className="text-xl text-gray-400">Tus tareas creadas</h3>
         </div>
 
-        <input type="text" placeholder="Busca tu tarea por el ID" />
+        <input
+          type="text"
+          placeholder="Busca tu tarea por el ID"
+          className="bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
+        />
 
         <button
           className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded"

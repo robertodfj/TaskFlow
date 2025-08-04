@@ -45,7 +45,7 @@ export default function AdminRegister() {
       }
 
       alert("Administrador registrado con éxito.");
-      navigate("/"); // Redirigir al login
+      navigate("/admin-view"); // Redirigir al login
     } catch (err) {
       setError(err.message);
     }
