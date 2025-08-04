@@ -74,12 +74,6 @@ export default function VistaAdmin() {
           <h3 className="text-xl text-gray-400">Todas las tareas (Admin)</h3>
         </div>
 
-        <input
-          type="text"
-          placeholder="Busca tu tarea por el ID"
-          className="bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
-        />
-
         <button
           className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded"
           onClick={() => navigate("/crear-tarea")}
@@ -95,6 +89,7 @@ export default function VistaAdmin() {
               <th className="p-3 text-left">ID</th>
               <th className="p-3 text-left">Título</th>
               <th className="p-3 text-left">Descripción</th>
+              <th className="p-3 text-left">Creador</th>
               <th className="p-3 text-left">Estado</th>
               <th className="p-3 text-left">Prioridad</th>
               <th className="p-3 text-left">Fecha Límite</th>
@@ -107,6 +102,7 @@ export default function VistaAdmin() {
                 <td className="p-3">{tarea.id}</td>
                 <td className="p-3">{tarea.titulo}</td>
                 <td className="p-3">{tarea.descripcion}</td>
+                <td className="p-3">{tarea.creador}</td>
                 <td className="p-3">
                   <select
                     value={tarea.estado}
@@ -121,13 +117,6 @@ export default function VistaAdmin() {
                 <td className="p-3">{tarea.prioridad}</td>
                 <td className="p-3">{tarea.fechaLimite}</td>
                 <td className="p-3 space-x-2">
-                  <button
-                    onClick={() => navigate(`/editar-tarea/${tarea.id}`)}
-                    className="bg-yellow-500 hover:bg-yellow-600 px-2 py-1 rounded text-black"
-                  >
-                    ✏️
-                  </button>
-
                   <button
                     onClick={() => eliminarTarea(tarea.id)}
                     className="bg-red-600 hover:bg-red-700 px-2 py-1 rounded"
