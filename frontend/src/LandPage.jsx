@@ -67,6 +67,29 @@ export default function LoginRegister() {
     }
   }
 
+  async function handleDemoLogin(e) {
+    e.preventDefault();
+    try {
+      const res = await fetch(`http://localhost:8080/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({username: "demo", password: "demo1234"}),
+      });
+      if (!res.ok) {
+      const text = await res.text();
+      throw new Error(text || "Error al iniciar sesión con demo");
+    }
+
+    const result = await res.json();
+    localStorage.setItem("token", result.token);
+    alert("Estás accediendo como usuario demo. Puedes probar la aplicación sin registrarte.");
+    navigate("/dashboard");
+    } catch (error) {
+      setError("No se puede iniciar la demo")
+      console.log(error)
+    }
+  }
+
   return (
     <main className="dark min-h-screen flex items-center justify-center bg-gray-900 text-white transition-colors">
       <section className="max-w-7xl w-full px-6 py-12 grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
@@ -162,7 +185,7 @@ export default function LoginRegister() {
                 <a href="#" className="text-blue-500 hover:underline">Olvidé mi contraseña</a>
               </p>
               <p>
-                <a href="#" className="text-blue-500 hover:underline">Probar sin iniciar sesión</a>
+                <a href="#" onClick={handleDemoLogin} className="text-blue-500 hover:underline">Probar sin iniciar sesión</a>
               </p>
             </details>
             <details>

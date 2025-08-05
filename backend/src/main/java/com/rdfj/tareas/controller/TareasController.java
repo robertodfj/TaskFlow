@@ -63,8 +63,14 @@ public class TareasController {
     @GetMapping("/mostrar-todas")
     @PreAuthorize("hasRole('ADMIN')")
     public List<TareaDto> mostrarTodasLasTareas() {
-        List<Tareas> tareas = repositorioTarea.findAll(); // sin filtrar por usuario
-        return tareas.stream().map(TareaDto::new).collect(Collectors.toList());
+        List<Tareas> tareas = repositorioTarea.findAll().stream()
+        // Filtro para permitir probar sin iniciar sesion
+        .filter(t -> !t.getCreador().getUsername().equals("demo"))
+        .collect(Collectors.toList());
+
+    return tareas.stream()
+        .map(TareaDto::new)
+        .toList();
     }
 
     // Buscar tarea por id
@@ -94,7 +100,6 @@ public class TareasController {
 
         Tareas tarea = optionalTarea.get();
 
-        // Actualiza los campos que te interesan
         tarea.setTitulo(tareaDto.getTitulo());
         tarea.setDescripcion(tareaDto.getDescripcion());
         tarea.setPrioridad(tareaDto.getPrioridad());
@@ -105,4 +110,6 @@ public class TareasController {
 
         return ResponseEntity.ok("Tarea actualizada con éxito");
     }
+
+
 }
