@@ -3,9 +3,11 @@ package com.rdfj.tareas.controller;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -60,11 +62,9 @@ public class TareasController {
     // Mostrar todas las tareas (Solo admin users) 
     @GetMapping("/mostrar-todas")
     @PreAuthorize("hasRole('ADMIN')")
-    public List<TareaDto> mostrarTodasTareas() {
-        List<Tareas> todasTareas = repositorioTarea.findAll();
-        return todasTareas.stream()
-                .map(TareaDto::new)
-                .toList();
+    public List<TareaDto> mostrarTodasLasTareas() {
+        List<Tareas> tareas = repositorioTarea.findAll(); // sin filtrar por usuario
+        return tareas.stream().map(TareaDto::new).collect(Collectors.toList());
     }
 
     // Buscar tarea por id
@@ -81,5 +81,28 @@ public class TareasController {
     public ResponseEntity<String> eliminarTarea(@PathVariable int id){
         repositorioTarea.deleteById(id);
         return ResponseEntity.ok("Tarea eliminada correctamente");
+    }
+
+    // Editar tarea
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<?> editarTarea(@PathVariable int id, @RequestBody TareaDto tareaDto) {
+        Optional<Tareas> optionalTarea = repositorioTarea.findById(id);
+
+        if (optionalTarea.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tarea no encontrada");
+        }
+
+        Tareas tarea = optionalTarea.get();
+
+        // Actualiza los campos que te interesan
+        tarea.setTitulo(tareaDto.getTitulo());
+        tarea.setDescripcion(tareaDto.getDescripcion());
+        tarea.setPrioridad(tareaDto.getPrioridad());
+        tarea.setEstado(tareaDto.getEstado());
+        tarea.setFechaLimite(tareaDto.getFechaLimite());
+
+        repositorioTarea.save(tarea);
+
+        return ResponseEntity.ok("Tarea actualizada con éxito");
     }
 }
