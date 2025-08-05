@@ -129,7 +129,14 @@ export default function CrearTarea() {
 
       <button
         className="mt-6 bg-gray-700 hover:bg-gray-600 transition px-6 py-3 rounded-xl text-white font-semibold shadow-md"
-        onClick={() => navigate("/dashboard")}
+        onClick={() => {
+          const rol = localStorage.getItem("rol");
+          if (rol === "ADMIN") {
+            navigate("/vista-admin");
+          } else {
+            navigate("/dashboard");
+          }
+        }}
       >
         Ver todas las tareas
       </button>
