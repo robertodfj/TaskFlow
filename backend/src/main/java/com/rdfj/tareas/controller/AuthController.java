@@ -76,22 +76,32 @@ public class AuthController {
     @PostMapping("/login")
         public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest) {
             try {
+                Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                        loginRequest.getEmail(), 
+                        loginRequest.getPassword())
+                );
 
-            Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                    loginRequest.getEmail(), 
-                    loginRequest.getPassword())
-        );
+                SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+                CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        String token = jwtUtil.generateToken(userDetails.getUsername());
+                String token = jwtUtil.generateToken(userDetails.getUsername());
 
-        return ResponseEntity.ok(new AuthResponse(token, userDetails.getUsername(), userDetails.getAuthorities().toString()));
-    } catch (Exception ex) {
-        return ResponseEntity.status(401).body(new AuthResponse("Credenciales inválidas", null, null));
-    }
+                // Extraer el rol
+                String rol = userDetails.getAuthorities().stream()
+                    .findFirst()
+                    .map(auth -> auth.getAuthority())
+                    .orElse("ROLE_USER");  
+
+                // Quitar prefijo ROLE_
+                rol = rol.replace("ROLE_", "");
+
+                return ResponseEntity.ok(new AuthResponse(token, userDetails.getUsername(), rol));
+
+            } catch (Exception ex) {
+                return ResponseEntity.status(401).body(new AuthResponse("Credenciales inválidas", null, null));
+            }
 }
 
 }
