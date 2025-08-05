@@ -4,8 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 
 
 public class LoginRequest {
-    @NotBlank(message = "El nombre de usuario no puede estar vacio")
-    private String username;
+    @NotBlank(message = "El email no puede estar vacio")
+    private String email;
     
     @NotBlank(message = "La contraseña no puede estar vacia")
     private String password;
@@ -13,12 +13,12 @@ public class LoginRequest {
     public LoginRequest() {
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {

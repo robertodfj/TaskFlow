@@ -2,21 +2,23 @@ package com.rdfj.tareas.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-
+import com.rdfj.tareas.entity.Usuarios.Rol;
 
 public class RegisterRequest {
-    @NotBlank(message = "El nombre de usuario no puede estar vacio")
+
+    @NotBlank(message = "El nombre de usuario no puede estar vacío")
     private String username;
     
-    @NotBlank(message = "La contraseña no puede estar vacia")
+    @NotBlank(message = "La contraseña no puede estar vacía")
     private String password;
+
+    @NotBlank(message = "El email no puede estar vacío")
+    private String email;
     
-    @NotNull(message = "El rol no puede estar vacio")
-    @NotNull(message = "El rol no puede estar vacio")
-    private com.rdfj.tareas.entity.Usuarios.Rol rol; // ADMIN o USER
-    
-    public RegisterRequest() {
-    }
+    @NotNull(message = "El rol no puede estar vacío")
+    private Rol rol;
+
+    public RegisterRequest() {}
 
     public String getUsername() {
         return username;
@@ -24,6 +26,14 @@ public class RegisterRequest {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail(){
+        return email;
+    }
+
+    public void setEmail(String email){
+        this.email = email;
     }
 
     public String getPassword() {
@@ -34,13 +44,11 @@ public class RegisterRequest {
         this.password = password;
     }
 
-    public com.rdfj.tareas.entity.Usuarios.Rol getRol() {
+    public Rol getRol() {
         return rol;
     }
 
-    public void setRol(com.rdfj.tareas.entity.Usuarios.Rol rol) {
+    public void setRol(Rol rol) {
         this.rol = rol;
     }
-    
 }
-

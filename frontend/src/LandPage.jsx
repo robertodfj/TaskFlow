@@ -5,6 +5,7 @@ export default function LoginRegister() {
   const [mode, setMode] = useState("login");
   const [data, setData] = useState({
     usuario: "",
+    email: "",
     password: "",
     password2: "",
   });
@@ -14,7 +15,7 @@ export default function LoginRegister() {
   const passwordsMatch = data.password === data.password2;
 
   function resetForm() {
-    setData({ usuario: "", password: "", password2: "" });
+    setData({ usuario: "", email: "", password: "", password2: "" });
     setError("");
   }
 
@@ -38,8 +39,8 @@ export default function LoginRegister() {
     const endpoint = mode === "login" ? "/auth/login" : "/auth/register";
     const body =
       mode === "login"
-        ? { username: data.usuario, password: data.password }
-        : { username: data.usuario, password: data.password, rol: "USER" };
+        ? { email: data.email, password: data.password }
+        : { username: data.usuario, email: data.email, password: data.password, rol: "USER" };
 
     try {
       const res = await fetch(`http://localhost:8080${endpoint}`, {
@@ -56,7 +57,11 @@ export default function LoginRegister() {
       if (mode === "login") {
         const result = await res.json();
         localStorage.setItem("token", result.token);
-        navigate("/dashboard");
+        if (result.rol === "ADMIN"){
+          navigate("/vista-admin")
+        }else{
+          navigate("/dashboard")
+        }
       } else {
         alert("Registro exitoso. Ahora puedes iniciar sesión.");
         setMode("login");
@@ -73,20 +78,21 @@ export default function LoginRegister() {
       const res = await fetch(`http://localhost:8080/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({username: "demo", password: "demo1234"}),
+        body: JSON.stringify({ email: "demo", password: "demo1234" }),
       });
-      if (!res.ok) {
-      const text = await res.text();
-      throw new Error(text || "Error al iniciar sesión con demo");
-    }
 
-    const result = await res.json();
-    localStorage.setItem("token", result.token);
-    alert("Estás accediendo como usuario demo. Puedes probar la aplicación sin registrarte.");
-    navigate("/dashboard");
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || "Error al iniciar sesión con demo");
+      }
+
+      const result = await res.json();
+      localStorage.setItem("token", result.token);
+      alert("Estás accediendo como usuario demo. Puedes probar la aplicación sin registrarte.");
+      navigate("/dashboard");
     } catch (error) {
-      setError("No se puede iniciar la demo")
-      console.log(error)
+      setError("No se puede iniciar la demo");
+      console.log(error);
     }
   }
 
@@ -126,18 +132,36 @@ export default function LoginRegister() {
           </header>
 
           <form onSubmit={handleSubmit} className="grid gap-4">
+
+            {/* Nombre de usuario solo en modo registro */}
+            {mode === "register" && (
+              <label>
+                <span className="block mb-1 text-sm font-medium text-gray-200">Nombre de usuario</span>
+                <input
+                  type="text"
+                  name="usuario"
+                  value={data.usuario}
+                  onChange={handleChange}
+                  className="w-full p-3 border border-gray-600 rounded-md bg-gray-700 text-white focus:ring-2 focus:ring-blue-500"
+                  required
+                />
+              </label>
+            )}
+
+            {/* Email */}
             <label>
-              <span className="block mb-1 text-sm font-medium text-gray-200">Usuario</span>
+              <span className="block mb-1 text-sm font-medium text-gray-200">Email</span>
               <input
-                type="text"
-                name="usuario"
-                value={data.usuario}
+                type="email"
+                name="email"
+                value={data.email}
                 onChange={handleChange}
                 className="w-full p-3 border border-gray-600 rounded-md bg-gray-700 text-white focus:ring-2 focus:ring-blue-500"
                 required
               />
             </label>
 
+            {/* Contraseña */}
             <label>
               <span className="block mb-1 text-sm font-medium text-gray-200">Contraseña</span>
               <input
@@ -150,6 +174,7 @@ export default function LoginRegister() {
               />
             </label>
 
+            {/* Repetir contraseña solo en modo registro */}
             {mode === "register" && (
               <label>
                 <span className="block mb-1 text-sm font-medium text-gray-200">Repetir contraseña</span>
@@ -167,8 +192,10 @@ export default function LoginRegister() {
               </label>
             )}
 
+            {/* Errores */}
             {error && <p className="text-red-500 text-sm">{error}</p>}
 
+            {/* Botón principal */}
             <button
               type="submit"
               disabled={mode === "register" && !passwordsMatch}

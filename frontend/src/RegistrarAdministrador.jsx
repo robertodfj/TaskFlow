@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 export default function AdminRegister() {
   const [data, setData] = useState({
     usuario: "",
+    email: "",
     password: "",
     password2: "",
   });
@@ -72,8 +73,18 @@ export default function AdminRegister() {
                   type="text"
                   name="usuario"
                   className="w-full p-3 border border-gray-600 rounded-md bg-gray-700 text-white focus:ring-2 focus:ring-blue-500"
-                  placeholder="Elige un usuario"
                   value={data.usuario}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
+              <label>
+                <span className="block mb-1 text-sm font-medium text-gray-200">Correo Electronico</span>
+                <input
+                  type="email"
+                  name="email"
+                  className="w-full p-3 border border-gray-600 rounded-md bg-gray-700 text-white focus:ring-2 focus:ring-blue-500"
+                  value={data.email}
                   onChange={handleChange}
                   required
                 />
@@ -84,7 +95,6 @@ export default function AdminRegister() {
                   type="password"
                   name="password"
                   className="w-full p-3 border border-gray-600 rounded-md bg-gray-700 text-white focus:ring-2 focus:ring-blue-500"
-                  placeholder="Crea una contraseña"
                   value={data.password}
                   onChange={handleChange}
                   required
@@ -96,7 +106,6 @@ export default function AdminRegister() {
                   type="password"
                   name="password2"
                   className="w-full p-3 border border-gray-600 rounded-md bg-gray-700 text-white focus:ring-2 focus:ring-blue-500"
-                  placeholder="Repite la contraseña"
                   value={data.password2}
                   onChange={handleChange}
                   required

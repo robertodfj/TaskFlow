@@ -24,6 +24,10 @@ public class Usuarios {
     @NotBlank(message = "El nombre de usuario no puede estar vacio")
     @Column(unique = true)
     private String username;
+
+    @NotBlank(message = "El email no puede estar vacio")
+    @Column(unique = true)
+    private String email;
     
     @NotBlank(message = "La contraseña no puede estar vacia")
     private String password;
@@ -49,6 +53,14 @@ public class Usuarios {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getEmail(){
+        return email;
+    }
+
+    public void setEmail(String email){
+        this.email = email;
     }
 
     public String getPassword() {

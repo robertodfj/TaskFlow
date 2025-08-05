@@ -55,6 +55,7 @@ public class AuthController {
         
             Usuarios nuevoUsuario = new Usuarios();
             nuevoUsuario.setUsername(request.getUsername());
+            nuevoUsuario.setEmail(request.getEmail());
             nuevoUsuario.setPassword(passwordEncoder.encode(request.getPassword()));
             nuevoUsuario.setRol(request.getRol()); // Para poder crear user admin necesidad de contraseña en el frontend
             repositorioUsuarios.save(nuevoUsuario);
@@ -78,7 +79,7 @@ public class AuthController {
 
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                    loginRequest.getUsername(), 
+                    loginRequest.getEmail(), 
                     loginRequest.getPassword())
         );
 
