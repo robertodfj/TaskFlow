@@ -33,9 +33,9 @@ public class TareasController {
     @PostMapping("/crear")
     public ResponseEntity<TareaDto> crearTarea(@Valid @RequestBody Tareas tarea) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
+        String email = auth.getName();
 
-        Usuarios usuario = repositorioUsuarios.findByUsername(username)
+        Usuarios usuario = repositorioUsuarios.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         tarea.setCreador(usuario); // Asignar el creador de la tarea
@@ -43,16 +43,17 @@ public class TareasController {
 
         TareaDto tareaDto = new TareaDto(nuevaTarea);
         return ResponseEntity.ok(tareaDto);
-
     }
 
     // Mostrar tareas del usuario autenticado
     @GetMapping("/mostrar")
     public List<TareaDto> mostrarTareas() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        String username = auth.getName();
-        Usuarios usuario = repositorioUsuarios.findByUsername(username)
+        String email = auth.getName();
+
+        Usuarios usuario = repositorioUsuarios.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
         List<Tareas> tareasUsuario = repositorioTarea.findByCreador(usuario);
         return tareasUsuario.stream()
                 .map(TareaDto::new)
@@ -64,13 +65,13 @@ public class TareasController {
     @PreAuthorize("hasRole('ADMIN')")
     public List<TareaDto> mostrarTodasLasTareas() {
         List<Tareas> tareas = repositorioTarea.findAll().stream()
-        // Filtro para permitir probar sin iniciar sesion
+        // Filtro para permitir probar sin iniciar sesión
         .filter(t -> !t.getCreador().getUsername().equals("demo"))
         .collect(Collectors.toList());
 
-    return tareas.stream()
-        .map(TareaDto::new)
-        .toList();
+        return tareas.stream()
+            .map(TareaDto::new)
+            .toList();
     }
 
     // Buscar tarea por id
@@ -110,6 +111,4 @@ public class TareasController {
 
         return ResponseEntity.ok("Tarea actualizada con éxito");
     }
-
-
 }

@@ -20,10 +20,10 @@ public class JwtUtil {
 
     
     // generacion JWT tokens
-    public String generateToken(String username){
+    public String generateToken(String email){
         try {
             return Jwts.builder()
-                .setSubject(username)
+                .setSubject(email)
                 .setIssuedAt(new java.util.Date(System.currentTimeMillis()))
                 .setExpiration(new java.util.Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(io.jsonwebtoken.SignatureAlgorithm.HS256, SECRET_KEY)

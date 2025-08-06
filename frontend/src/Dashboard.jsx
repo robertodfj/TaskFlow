@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function DashBoard() {
   const [tareas, setTareas] = useState([]);
+  const [orden, setOrden] = useState(null);
   const navigate = useNavigate();
 
   const token = localStorage.getItem("token");
@@ -46,6 +47,20 @@ export default function DashBoard() {
       .catch((err) => console.error(err));
   };
 
+  function OrdenarPor(campo){
+    const tareasOrdenadas = [...tareas].sort((a,b) => {
+      let valorA = a[campo];
+      let valorB = b[campo];
+
+      if(valorA < valorB) return ordenAscendente ? -1 : 1;
+      if(valorA > valorB) return ordenDescendente ? 1 : -1;
+      return 0
+    });
+
+    setTareas(tareasOrdenadas);
+
+  }
+
   return (
     <main className="min-h-screen bg-gray-900 text-white p-4">
       <header className="flex justify-between items-center mb-5 p-3">
@@ -66,12 +81,12 @@ export default function DashBoard() {
         <table className="w-full table-auto border-collapse">
           <thead>
             <tr className="bg-gray-800">
-              <th className="p-4 text-left">ID</th>
+              <th className="p-4 text-left" >ID</th>
               <th className="p-3 text-left">Título</th>
               <th className="p-3 text-left">Descripción</th>
-              <th className="p-3 text-left">Estado</th>
-              <th className="p-3 text-left">Prioridad</th>
-              <th className="text-left">Fecha Límite</th>
+              <th className="p-3 text-left" onClick={() => ordenarPor("estado")}>Estado</th>
+              <th className="p-3 text-left" onClick={() => ordenarPor("prioridad")}>Prioridad</th>
+              <th className="text-left" onClick={() => ordenarPor("fechaLimite")}>Fecha Límite</th>
             </tr>
           </thead>
           <tbody>

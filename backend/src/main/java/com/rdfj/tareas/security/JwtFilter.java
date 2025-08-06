@@ -28,52 +28,51 @@ public class JwtFilter extends OncePerRequestFilter {
     private UserDetailsService userDetailsService;
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request,
-                                    @NonNull HttpServletResponse response,
-                                    @NonNull FilterChain filterChain)
-            throws ServletException, IOException {
+protected void doFilterInternal(@NonNull HttpServletRequest request,
+                                @NonNull HttpServletResponse response,
+                                @NonNull FilterChain filterChain)
+        throws ServletException, IOException {
 
-        String authorizationHeader = request.getHeader("Authorization");
+    String authorizationHeader = request.getHeader("Authorization");
 
-        String username = null;
-        String jwt = null;
+    String email = null;
+    String jwt = null;
 
-        System.out.println("Request URI: " + request.getRequestURI());
-        System.out.println("Authorization header: " + authorizationHeader);
+    System.out.println("Request URI: " + request.getRequestURI());
+    System.out.println("Authorization header: " + authorizationHeader);
 
-        try {
-            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-                jwt = authorizationHeader.substring(7);
-                System.out.println("Token JWT extraído: " + jwt);
-                username = jwtUtil.extractUsername(jwt);
-                System.out.println("Username extraído del token: " + username);
-            }
-
-            if (SecurityContextHolder.getContext().getAuthentication() != null) {
-                System.out.println("Autenticación ya establecida en contexto para usuario: " +
-                        SecurityContextHolder.getContext().getAuthentication().getName());
-            }
-
-            if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-
-                if (jwtUtil.tokenValido(jwt, userDetails.getUsername())) {
-                    UsernamePasswordAuthenticationToken authToken =
-                            new UsernamePasswordAuthenticationToken(
-                                    userDetails, null, userDetails.getAuthorities());
-
-                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                    SecurityContextHolder.getContext().setAuthentication(authToken);
-                    System.out.println("Autenticación establecida para usuario: " + username);
-                }
-            }
-        } catch (Exception e) {
-            // Solo loguear la excepción, no bloquear la petición
-            System.out.println("Error en JwtFilter: " + e.getMessage());
-            e.printStackTrace();
+    try {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            jwt = authorizationHeader.substring(7);
+            System.out.println("Token JWT extraído: " + jwt);
+            email = jwtUtil.extractUsername(jwt); // ← devuelve el email
+            System.out.println("Email extraído del token: " + email);
         }
 
-        filterChain.doFilter(request, response);
+        if (SecurityContextHolder.getContext().getAuthentication() != null) {
+            System.out.println("Autenticación ya establecida en contexto para usuario: " +
+                    SecurityContextHolder.getContext().getAuthentication().getName());
+        }
+
+        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername(email); // ← ahora se busca por email
+
+            if (jwtUtil.tokenValido(jwt, userDetails.getUsername())) {
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails, null, userDetails.getAuthorities());
+
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+                System.out.println("Autenticación establecida para usuario: " + email);
+            }
+        }
+    } catch (Exception e) {
+        System.out.println("Error en JwtFilter: " + e.getMessage());
+        e.printStackTrace();
     }
+
+    filterChain.doFilter(request, response);
+}
 }
