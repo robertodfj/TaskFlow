@@ -30,6 +30,7 @@ export default function AdminRegister() {
     const body = {
       username: data.usuario,
       password: data.password,
+      email: data.email,
       rol: "ADMIN",
     };
 
@@ -46,7 +47,7 @@ export default function AdminRegister() {
       }
 
       alert("Administrador registrado con éxito.");
-      navigate("/admin-view"); // Redirigir al login
+      navigate("/"); // Redirigir al login
     } catch (err) {
       setError(err.message);
     }

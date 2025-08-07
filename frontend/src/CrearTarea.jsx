@@ -131,10 +131,11 @@ export default function CrearTarea() {
         className="mt-6 bg-gray-700 hover:bg-gray-600 transition px-6 py-3 rounded-xl text-white font-semibold shadow-md"
         onClick={() => {
           const rol = localStorage.getItem("rol");
-          if (rol === "ADMIN") {
-            navigate("/vista-admin");
-          } else {
-            navigate("/dashboard");
+          console.log(rol);
+          if (rol === "ADMIN"){
+            navigate("/vista-admin")
+          }else{
+            navigate("/dashboard")
           }
         }}
       >

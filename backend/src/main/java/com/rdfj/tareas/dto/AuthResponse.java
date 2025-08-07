@@ -3,15 +3,15 @@ package com.rdfj.tareas.dto;
 public class AuthResponse {
     private String token;
     private String username;
-    private String role;
+    private String rol;
 
     public AuthResponse() {
     }
 
-    public AuthResponse(String token, String username, String role) {
+    public AuthResponse(String token, String username, String rol) {
         this.token = token;
         this.username = username;
-        this.role = role;
+        this.rol = rol;
     }
 
     public String getToken() {
@@ -30,12 +30,12 @@ public class AuthResponse {
         this.username = username;
     }
 
-    public String getRole() {
-        return role;
+    public String getRol() {
+        return rol;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRole(String rol) {
+        this.rol = rol;
     }
     
 }

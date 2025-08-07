@@ -57,6 +57,9 @@ export default function LoginRegister() {
       if (mode === "login") {
         const result = await res.json();
         localStorage.setItem("token", result.token);
+        const rol = result.rol || result.rol;
+        localStorage.setItem("rol", rol)
+        console.log(result);
         if (result.rol === "ADMIN"){
           navigate("/vista-admin")
         }else{
@@ -208,9 +211,6 @@ export default function LoginRegister() {
           <footer className="mt-6 text-sm text-gray-400 space-y-2">
             <details>
               <summary className="cursor-pointer hover:underline">¿Tienes problemas para iniciar sesión?</summary>
-              <p>
-                <a href="#" className="text-blue-500 hover:underline">Olvidé mi contraseña</a>
-              </p>
               <p>
                 <a href="#" onClick={handleDemoLogin} className="text-blue-500 hover:underline">Probar sin iniciar sesión</a>
               </p>
