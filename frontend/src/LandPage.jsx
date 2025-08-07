@@ -81,7 +81,7 @@ export default function LoginRegister() {
       const res = await fetch(`http://localhost:8080/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: "demo", password: "demo1234" }),
+        body: JSON.stringify({ email: "demo@demo.com", password: "demo1234" }),
       });
 
       if (!res.ok) {
